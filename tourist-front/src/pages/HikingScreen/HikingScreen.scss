@@ -1,0 +1,33 @@
+.hiking-screen-container {
+    height: 100%;
+    .row {
+        height: 100%;
+    }
+}
+
+.hiking-screen-panel {
+    background-color: #e3e3e3;
+}
+
+.hiking-screen-left-panel {
+    border-right: 1px solid #aaaaaa;
+}
+
+.hiking-screen-right-panel {
+    border-left: 1px solid #aaaaaa;
+}
+
+.hiking-screen-center {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.hiking-screen-center-top {
+    flex: 1;
+}
+
+.hiking-screen-center-bottom {
+    height: 150px;
+    border-top: 1px solid #aaaaaa;
+}

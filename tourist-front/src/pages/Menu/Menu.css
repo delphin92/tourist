@@ -1,0 +1,16 @@
+.menu-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.menu-buttons-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.menu-buttons-container .btn:not(:last-child) {
+    margin-bottom: 5px;
+}
