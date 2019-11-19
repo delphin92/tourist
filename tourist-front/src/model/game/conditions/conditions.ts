@@ -1,6 +1,10 @@
 import {GameStateModification} from "model/game/gameState";
 import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
-import {modifyEnergy, modifyEnergyMax, modifyRestSpeed} from "model/game/characteristics/characteristics";
+import {
+    modifyEnergy,
+    modifyEnergyLimit,
+    modifyRestSpeed
+} from "model/game/characteristics/characteristics";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -26,7 +30,7 @@ export type ConditionsModification = (conditions: Conditions) => Conditions;
 
 export const startCondition: (conditionType: ConditionType) => GameStateModification =
     (conditionType: ConditionType) => {
-        const condition = CONDITIONS[conditionType];
+        const condition = getConditions()[conditionType];
 
         if (!condition) {
             return NEUTRAL_GAME_STATE_MODIFICATION;
@@ -42,18 +46,18 @@ export const startCondition: (conditionType: ConditionType) => GameStateModifica
             : state;
     };
 
-const CONDITIONS: Partial<Conditions> = {
+const getConditions: () => Partial<Conditions> = () => ({
     walk: {
         permanentEffect: [
             modifyEnergy(value => value - 80),
-            modifyEnergyMax(value => value - 5)
+            modifyEnergyLimit(value => value - 5)
         ]
     },
     rest: {
         permanentEffect: [
-            gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed)(gameState),
+            gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
             modifyRestSpeed(speed => speed + 1)
         ]
     },
     wake: {}
-};
+});

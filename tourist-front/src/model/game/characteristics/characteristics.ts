@@ -1,26 +1,30 @@
 import {combineModifications, ValueModification} from "model/game/utils";
 import {GameState, GameStateModification} from "model/game/gameState";
 import {ConditionType, startCondition} from "model/game/conditions/conditions";
+import { flow } from "lodash";
+
+export interface Characteristic {
+    value: number;
+    limit?: number;
+    max: number
+}
 
 export enum CharacteristicType {
     ENERGY = 'energy',
-    ENERGY_MAX = 'energyMax',
-    ENERGY_MAX_MAX = 'energyMaxMax',
     CHEERFULNESS = 'cheerfulness',
     BELLYFUL = 'bellyful',
     HYDRATION = 'hydration',
     MOOD = 'mood',
     COMFORT = 'comfort',
     REST_SPEED = 'restSpeed',
-    REST_SPEED_MAX = 'restSpeedMax',
 }
 
 export type Characteristics = {
-    [name in CharacteristicType]: number
+    [name in CharacteristicType]: Characteristic
 }
 
 export type CharacteristicsModification = (characteristics: Characteristics) => Partial<Characteristics>;
-export type CharacteristicValueModification = (modification: ValueModification) => GameStateModification;
+export type CharacteristicAttributeModification = (modification: ValueModification) => GameStateModification;
 
 const modifyCharacteristics: (modification: CharacteristicsModification) => GameStateModification =
     (modification: CharacteristicsModification) => (gameState: GameState) => ({
@@ -28,26 +32,41 @@ const modifyCharacteristics: (modification: CharacteristicsModification) => Game
         characteristics: {...gameState.characteristics, ...modification(gameState.characteristics)}
     });
 
-const modifyCharacteristicWithMax: (characteristicName: CharacteristicType, characteristicMaxName: CharacteristicType) => CharacteristicValueModification =
-    (characteristicName: CharacteristicType, characteristicMaxName: CharacteristicType) => (modification: ValueModification) =>
-        modifyCharacteristics(characteristics => ({
-            [characteristicName]: Math.min(modification(characteristics[characteristicName]), characteristics[characteristicMaxName])
-        }));
+const modifyCharacteristicValue: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
+    (characteristicName: CharacteristicType) => (modification: ValueModification) =>
+        modifyCharacteristics(characteristics =>
+            flow(
+                () => characteristics[characteristicName],
+                characteristic => ({
+                    [characteristicName]: {
+                        ...characteristic,
+                        value: Math.min(modification(characteristic.value), characteristic.limit || characteristic.max)
+                    }
+                })
+            )());
 
-export const modifyEnergy: CharacteristicValueModification =
+const modifyCharacteristicLimit: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
+    (characteristicName: CharacteristicType) => (modification: ValueModification) =>
+        modifyCharacteristics(characteristics =>
+            flow(
+                () => characteristics[characteristicName],
+                characteristic => ({
+                    [characteristicName]: {
+                        ...characteristic,
+                        limit: Math.min(modification(characteristic.limit || characteristic.max), characteristic.max)
+                    }
+                })
+            )());
+
+export const modifyEnergy: CharacteristicAttributeModification =
     (modification: ValueModification) =>
-        combineModifications(
-            modifyCharacteristics((characteristics: Characteristics) => ({
-                energy: Math.min(characteristics.energyMax, modification(characteristics.energy))
-            })),
+        flow(
+            modifyCharacteristicValue(CharacteristicType.ENERGY)(modification),
             startCondition(ConditionType.TIRED)
         );
 
-export const modifyEnergyMax: CharacteristicValueModification =
-    (modification: ValueModification) =>
-        modifyCharacteristics((characteristics: Characteristics) => ({
-            energyMax: Math.min(characteristics.energyMaxMax, modification(characteristics.energyMax))
-        }));
+export const modifyEnergyLimit: CharacteristicAttributeModification =
+    modifyCharacteristicLimit(CharacteristicType.ENERGY);
 
-export const modifyRestSpeed: CharacteristicValueModification =
-    modifyCharacteristicWithMax(CharacteristicType.REST_SPEED, CharacteristicType.REST_SPEED_MAX);
+export const modifyRestSpeed: CharacteristicAttributeModification =
+    modifyCharacteristicValue(CharacteristicType.REST_SPEED);

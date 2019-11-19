@@ -1,16 +1,18 @@
 import React from "react";
 import {Card} from "react-bootstrap";
 import CharacteristicBar from "pages/HikingScreen/Characteristics/CharacteristicMonitor/CharacteristicBar";
+import {CharacteristicType} from "model/game/characteristics/characteristics";
+import {characteristicsLabels} from "model/game/characteristics/characteristicsLabels";
 
 interface CharacteristicMonitorProps {
-    name: string;
+    characteristicType: CharacteristicType;
 }
 
-const CharacteristicMonitor: React.FC<CharacteristicMonitorProps> = ({name}) => (
+const CharacteristicMonitor: React.FC<CharacteristicMonitorProps> = ({characteristicType}) => (
     <Card>
         <Card.Body>
-            {name}
-            <CharacteristicBar value={200} limit={400} max={500} color="red"/>
+            {characteristicsLabels[characteristicType]}
+            <CharacteristicBar characteristicType={characteristicType} color="red"/>
         </Card.Body>
     </Card>
 );
