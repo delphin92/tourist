@@ -38,7 +38,7 @@ export const startCondition: (conditionType: ConditionType) => GameStateModifica
 
         const addConditionEffect: GameStateModification = ({conditions, ...state}) => ({
             ...state,
-            conditions: conditions.add(condition)
+            conditions: {...conditions, [conditionType]: condition}
         });
 
         return state => condition.startEffect
