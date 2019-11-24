@@ -5,6 +5,7 @@ import {
     modifyEnergyLimit,
     modifyRestSpeed
 } from "model/game/characteristics/characteristics";
+import { flow } from "lodash";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -17,9 +18,9 @@ export enum ConditionType {
 }
 
 export interface Condition {
-    startEffect?: GameStateModification;
-    endEffect?: GameStateModification;
-    permanentEffect?: GameStateModification | GameStateModification[];
+    startEffect?: () => GameStateModification;
+    endEffect?: () => GameStateModification;
+    permanentEffect?: () => GameStateModification;
 }
 
 export type Conditions = {
@@ -30,7 +31,7 @@ export type ConditionsModification = (conditions: Conditions) => Conditions;
 
 export const startCondition: (conditionType: ConditionType) => GameStateModification =
     (conditionType: ConditionType) => {
-        const condition = getConditions()[conditionType];
+        const condition = CONDITIONS[conditionType];
 
         if (!condition) {
             return NEUTRAL_GAME_STATE_MODIFICATION;
@@ -42,22 +43,22 @@ export const startCondition: (conditionType: ConditionType) => GameStateModifica
         });
 
         return state => condition.startEffect
-            ? condition.startEffect(addConditionEffect(state))
+            ? condition.startEffect()(addConditionEffect(state))
             : state;
     };
 
-const getConditions: () => Partial<Conditions> = () => ({
+const CONDITIONS: Partial<Conditions> = {
     walk: {
-        permanentEffect: [
+        permanentEffect: () => flow(
             modifyEnergy(value => value - 80),
             modifyEnergyLimit(value => value - 5)
-        ]
+        )
     },
     rest: {
-        permanentEffect: [
+        permanentEffect: () => flow(
             gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
             modifyRestSpeed(speed => speed + 1)
-        ]
+        )
     },
     wake: {}
-});
+};
