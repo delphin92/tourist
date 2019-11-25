@@ -10,15 +10,15 @@ const initialGameState: GameState =
     flow(
         () => ({
             characteristics: {
-                [CharacteristicType.ENERGY]: initCharacteristic(80, 100, 100),
-                [CharacteristicType.CHEERFULNESS]: initCharacteristic(60, 100, 100),
-                [CharacteristicType.BELLYFUL]: initCharacteristic(40, 100, 100),
-                [CharacteristicType.HYDRATION]: initCharacteristic(50, 100, 100),
-                [CharacteristicType.MOOD]: initCharacteristic(70, 100, 100),
+                [CharacteristicType.ENERGY]: initCharacteristic(800, 1000, 1000),
+                [CharacteristicType.CHEERFULNESS]: initCharacteristic(600, 1000, 1000),
+                [CharacteristicType.BELLYFUL]: initCharacteristic(400, 1000, 1000),
+                [CharacteristicType.HYDRATION]: initCharacteristic(500, 1000, 1000),
+                [CharacteristicType.MOOD]: initCharacteristic(700, 1000, 1000),
                 [CharacteristicType.COMFORT]: initCharacteristic(10, 100),
                 [CharacteristicType.REST_SPEED]: initCharacteristic(0, 10)
             },
-            conditions: {}
+            activeConditions: []
         }),
         startCondition(ConditionType.WALK)
     )();

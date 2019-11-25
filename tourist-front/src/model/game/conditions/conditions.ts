@@ -1,5 +1,5 @@
 import {GameStateModification} from "model/game/gameState";
-import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
+import {combineModifications, NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
 import {
     modifyEnergy,
     modifyEnergyLimit,
@@ -37,15 +37,26 @@ export const startCondition: (conditionType: ConditionType) => GameStateModifica
             return NEUTRAL_GAME_STATE_MODIFICATION;
         }
 
-        const addConditionEffect: GameStateModification = ({conditions, ...state}) => ({
+        const addConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
             ...state,
-            conditions: {...conditions, [conditionType]: condition}
+            activeConditions: [...activeConditions, conditionType]
         });
 
         return state => condition.startEffect
             ? condition.startEffect()(addConditionEffect(state))
-            : state;
+            : addConditionEffect(state);
     };
+
+export const applyAllConditions: GameStateModification =
+    state =>
+        combineModifications(
+            ...state.activeConditions
+                .map(conditionType => CONDITIONS[conditionType])
+                .filter((condition): condition is Condition => !!condition)
+                .map(condition => condition.permanentEffect)
+                .filter((effect): effect is () => GameStateModification => !!effect)
+                .map(effect => effect())
+        )(state);
 
 const CONDITIONS: Partial<Conditions> = {
     walk: {
