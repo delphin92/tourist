@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux-starter-kit';
 import gameState from "redux/reducers/gameStateSlice";
-import timeControlSlice from "./reducers/timeControlSlice";
+import timeControl from "./reducers/timeControl";
 
 const rootReducer = combineReducers({
     gameState: gameState.reducer,
-    timeControl: timeControlSlice.reducer
+    timeControl
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

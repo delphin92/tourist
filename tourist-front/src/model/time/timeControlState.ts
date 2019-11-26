@@ -7,4 +7,5 @@ export enum TimeSpeeds {
 export interface TimeControlState {
     speed: TimeSpeeds;
     paused: boolean;
+    _timerId?: number;
 }

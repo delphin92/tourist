@@ -2,21 +2,20 @@ import React from "react";
 import {FaFastForward, FaPause, FaPlay} from "react-icons/all";
 import {ToggleButton, ToggleButtonGroup} from "react-bootstrap";
 import {connect} from "react-redux";
-import {TimeControlState, TimeSpeeds} from "../../../model/time/timeControlState";
-import {RootState} from "../../../redux/rootReducer";
-import timeControlSlice from "../../../redux/reducers/timeControlSlice";
+import {TimeControlState, TimeSpeeds} from "model/time/timeControlState";
+import {RootState} from "redux/rootReducer";
+import {startTimer, stopTimer} from "redux/reducers/timeControl";
 
 interface TimeControlProps {
     timeControlState: TimeControlState;
-    start(): void;
-    pause(): void;
-    setSpeed(speed: TimeSpeeds): void;
+    startTimer(speed?: TimeSpeeds): void;
+    stopTimer(): void;
 }
 
-const TimeControl: React.FC<TimeControlProps> = ({timeControlState: {speed, paused}, pause, setSpeed}) => {
+const TimeControl: React.FC<TimeControlProps> = ({timeControlState: {speed, paused}, startTimer, stopTimer}) => {
     const value = paused ? 0 : speed;
     const handleChange = (value: number) =>
-        value === 0 ? pause() : setSpeed(value);
+        value === 0 ? stopTimer() : startTimer(value);
 
     return (
         <ToggleButtonGroup name="speed" type="radio" value={value} onChange={handleChange}>
@@ -31,5 +30,5 @@ export default connect(
     (state: RootState) => ({
         timeControlState: state.timeControl
     }),
-    timeControlSlice.actions
+    {startTimer, stopTimer}
 )(TimeControl);
