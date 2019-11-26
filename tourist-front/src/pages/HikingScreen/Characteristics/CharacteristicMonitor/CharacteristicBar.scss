@@ -2,8 +2,16 @@
     height: 20px;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
+    background-color: #e3e3e3;
+    position: relative;
 
     div {
         height: 100%;
+        border-radius: .25rem;
+        position: absolute;
+    }
+
+    .limit-bar {
+        background-color: white;
     }
 }

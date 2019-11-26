@@ -15,12 +15,13 @@ interface CharacteristicBarProps extends CharacteristicBarOwnProps {
 
 const CharacteristicBar: React.FC<CharacteristicBarProps> = ({color, characteristic}) => {
     const {value, limit, max} = characteristic;
-    const width = (value / max * 100) + '%';
-    //TODO: limit
+    const valueWidth = (value / max * 100) + '%';
+    const limitWidth = limit ? ((limit / max * 100) + '%') : '100%';
 
     return (
         <div className="characteristic-bar">
-            <div style={{width, backgroundColor: color}}/>
+            <div className="limit-bar" style={{width: limitWidth}}/>
+            <div className="value-bar" style={{width: valueWidth, backgroundColor: color}}/>
         </div>
     );
 };
