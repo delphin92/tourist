@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "redux-starter-kit";
 import {TimeControlState, TimeSpeeds} from "model/time/timeControlState";
 import {AppThunk} from "redux/store";
-import gameStateSlice from "./gameStateSlice";
+import { turn } from "./gameState";
 
 const timeControlSlice = createSlice({
     name: 'timeControl',
@@ -27,7 +27,7 @@ export const startTimer = (speed: TimeSpeeds = TimeSpeeds.NORMAL): AppThunk => d
     const interval = 1000 / speed;
 
     const timerId = window.setInterval(() => {
-        dispatch(gameStateSlice.actions.turn());
+        dispatch(turn());
     }, interval);
 
     dispatch(start({timerId, speed}));

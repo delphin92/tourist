@@ -8,6 +8,6 @@ export interface GameState {
 
 export type GameStateModification = (gameState: GameState) => GameState;
 
-export const turn: (gameState: GameState) => GameState =
+export const nextTurn: (gameState: GameState) => GameState =
     (gameState: GameState) =>
         applyAllConditions(gameState);

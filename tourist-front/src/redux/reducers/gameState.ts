@@ -1,12 +1,16 @@
 import {createSlice} from "redux-starter-kit";
-import {turn, GameState} from "model/game/gameState";
+import {nextTurn, GameState} from "model/game/gameState";
 import initialGameState from "model/game/stubs/initialGameState";
 
-export default createSlice({
+const gameState = createSlice({
     name: 'gameState',
     initialState: initialGameState as GameState,
     reducers: {
         init: (state, {payload: newGameState}) => newGameState,
-        turn: state => turn(state)
+        turn: state => nextTurn(state)
     }
 });
+
+export const {init, turn} = gameState.actions;
+
+export default gameState.reducer;

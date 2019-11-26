@@ -4,7 +4,7 @@ import './Menu.css';
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {GameState} from "model/game/gameState";
-import gameStateSlice from "redux/reducers/gameStateSlice";
+import { init } from "redux/reducers/gameState";
 import initialGameState from "model/game/stubs/initialGameState";
 
 interface MenuProps extends RouteComponentProps {
@@ -30,6 +30,6 @@ const Menu: React.FC<MenuProps> = ({initGame, history}) => {
     );
 };
 
-export default connect(null, dispatch => ({
-    initGame: (gameState: GameState) => dispatch(gameStateSlice.actions.init(gameState))
-}))(withRouter(Menu));
+export default connect(null, {
+    initGame: init
+})(withRouter(Menu));
