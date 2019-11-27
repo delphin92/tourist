@@ -2,7 +2,11 @@ import React from "react";
 import TimeControl from "pages/HikingScreen/Actions/TimeControl";
 import {Card} from "react-bootstrap";
 
-const Actions: React.FC = ({}) => (
+interface ActionsProps {
+
+}
+
+const Actions: React.FC<ActionsProps> = () => (
     <Card>
         <Card.Body>
             <TimeControl/>

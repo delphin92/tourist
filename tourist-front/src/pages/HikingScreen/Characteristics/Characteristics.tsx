@@ -2,7 +2,11 @@ import React from "react";
 import CharacteristicMonitor from "pages/HikingScreen/Characteristics/CharacteristicMonitor/CharacteristicMonitor";
 import {CharacteristicType} from "model/game/characteristics/characteristics";
 
-const Characteristics: React.FC = ({}) => (
+interface CharacteristicsProps {
+
+}
+
+const Characteristics: React.FC<CharacteristicsProps> = () => (
     <div>
         <CharacteristicMonitor characteristicType={CharacteristicType.ENERGY}/>
         <CharacteristicMonitor characteristicType={CharacteristicType.CHEERFULNESS}/>

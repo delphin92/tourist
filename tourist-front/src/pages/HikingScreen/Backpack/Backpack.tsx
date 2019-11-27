@@ -1,6 +1,10 @@
 import React from "react";
 
-const Backpack: React.FC = ({}) => (
+interface BackpackProps {
+
+}
+
+const Backpack: React.FC<BackpackProps> = () => (
     <div>Hello Backpack</div>
 );
 
