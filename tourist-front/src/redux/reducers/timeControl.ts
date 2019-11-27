@@ -35,5 +35,5 @@ export const startTimer = (speed: TimeSpeeds = TimeSpeeds.NORMAL): AppThunk => d
 
 export const stopTimer = (): AppThunk => (dispatch, getState) => {
     clearInterval(getState().timeControl._timerId);
-    dispatch(stop);
+    dispatch(stop());
 };
