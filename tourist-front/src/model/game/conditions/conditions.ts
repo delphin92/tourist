@@ -5,7 +5,7 @@ import {
     modifyEnergyLimit,
     modifyRestSpeed
 } from "model/game/characteristics/characteristics";
-import { flow } from "lodash";
+import { flow, pull } from "lodash";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -29,23 +29,39 @@ export type Conditions = {
 
 export type ConditionsModification = (conditions: Conditions) => Conditions;
 
-export const startCondition: (conditionType: ConditionType) => GameStateModification =
-    (conditionType: ConditionType) => {
-        const condition = CONDITIONS[conditionType];
+export const startCondition = (conditionType: ConditionType): GameStateModification => {
+    const condition = CONDITIONS[conditionType];
 
-        if (!condition) {
-            return NEUTRAL_GAME_STATE_MODIFICATION;
-        }
+    if (!condition) {
+        return NEUTRAL_GAME_STATE_MODIFICATION;
+    }
 
-        const addConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
-            ...state,
-            activeConditions: [...activeConditions, conditionType]
-        });
+    const addConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
+        ...state,
+        activeConditions: [...activeConditions, conditionType]
+    });
 
-        return state => condition.startEffect
-            ? condition.startEffect()(addConditionEffect(state))
-            : addConditionEffect(state);
-    };
+    return condition.startEffect
+        ? flow(addConditionEffect, condition.startEffect())
+        : addConditionEffect;
+};
+
+export const stopCondition = (conditionType: ConditionType): GameStateModification => {
+    const condition = CONDITIONS[conditionType];
+
+    if (!condition) {
+        return NEUTRAL_GAME_STATE_MODIFICATION;
+    }
+
+    const removeConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
+        ...state,
+        activeConditions: pull(activeConditions, conditionType)
+    });
+
+    return condition.endEffect
+        ? flow(removeConditionEffect, condition.endEffect())
+        : removeConditionEffect;
+};
 
 export const applyAllConditions: GameStateModification =
     state =>
