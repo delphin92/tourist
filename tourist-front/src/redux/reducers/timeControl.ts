@@ -23,7 +23,13 @@ const {start, stop} = timeControlSlice.actions;
 
 export default timeControlSlice.reducer;
 
-export const startTimer = (speed: TimeSpeeds = TimeSpeeds.NORMAL): AppThunk => dispatch => {
+export const startTimer = (speed: TimeSpeeds = TimeSpeeds.NORMAL): AppThunk => (dispatch, getState) => {
+    const oldTimerId = getState().timeControl._timerId;
+
+    if (oldTimerId) {
+        clearInterval(getState().timeControl._timerId);
+    }
+
     const interval = 1000 / speed;
 
     const timerId = window.setInterval(() => {
