@@ -1,11 +1,8 @@
 import {GameStateModification} from "model/game/gameState";
-import {combineModifications, NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
-import {
-    modifyEnergy,
-    modifyEnergyLimit,
-    modifyRestSpeed
-} from "model/game/characteristics/characteristics";
-import { flow, pull } from "lodash";
+import {combineModifications, NEUTRAL_GAME_STATE_MODIFICATION, when} from "model/game/utils";
+import { flow, without } from "lodash";
+import {modifyMood, modifyRestSpeed} from "model/game/characteristics/modifications/other";
+import {modifyEnergy, modifyEnergyLimit} from "model/game/characteristics/modifications/energy";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -36,16 +33,14 @@ export const startCondition = (conditionType: ConditionType): GameStateModificat
         return NEUTRAL_GAME_STATE_MODIFICATION;
     }
 
-    const addConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
-        ...state,
-        activeConditions: !activeConditions.includes(conditionType)
-            ? [...activeConditions, conditionType]
-            : activeConditions
-    });
-
-    return condition.startEffect
-        ? flow(addConditionEffect, condition.startEffect())
-        : addConditionEffect;
+    return when(({activeConditions}) => !activeConditions.includes(conditionType))(
+        flow(
+            state => ({...state, activeConditions: [...state.activeConditions, conditionType]}),
+            condition.startEffect
+                ? condition.startEffect()
+                : NEUTRAL_GAME_STATE_MODIFICATION
+        )
+    );
 };
 
 export const stopCondition = (conditionType: ConditionType): GameStateModification => {
@@ -55,14 +50,14 @@ export const stopCondition = (conditionType: ConditionType): GameStateModificati
         return NEUTRAL_GAME_STATE_MODIFICATION;
     }
 
-    const removeConditionEffect: GameStateModification = ({activeConditions, ...state}) => ({
-        ...state,
-        activeConditions: pull(activeConditions, conditionType)
-    });
-
-    return condition.endEffect
-        ? flow(removeConditionEffect, condition.endEffect())
-        : removeConditionEffect;
+    return when(({activeConditions}) => activeConditions.includes(conditionType))(
+        flow(
+            state => ({...state, activeConditions: without(state.activeConditions, conditionType)}),
+            condition.endEffect
+                ? condition.endEffect()
+                : NEUTRAL_GAME_STATE_MODIFICATION
+        )
+    );
 };
 
 export const applyAllConditions: GameStateModification =
@@ -79,15 +74,19 @@ export const applyAllConditions: GameStateModification =
 const CONDITIONS: Partial<Conditions> = {
     walk: {
         permanentEffect: () => flow(
-            modifyEnergy(value => value - 80),
-            modifyEnergyLimit(value => value - 5)
+            modifyEnergyLimit(value => value - 5),
+            modifyEnergy(value => value - 80)
         )
     },
     rest: {
         permanentEffect: () => flow(
             gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
-            modifyRestSpeed(speed => speed + 1)
+            modifyRestSpeed(speed => speed + 10)
         )
     },
-    wake: {}
+    wake: {},
+    tired: {
+        startEffect: () => modifyMood(mood => mood - 200),
+        endEffect: () => modifyMood(mood => mood + 200)
+    }
 };

@@ -1,7 +1,6 @@
-import { ValueModification} from "model/game/utils";
+import {ValueModification} from "model/game/utils";
 import {GameState, GameStateModification} from "model/game/gameState";
-import {ConditionType, startCondition} from "model/game/conditions/conditions";
-import { flow } from "lodash";
+import { flow, clamp } from "lodash";
 
 export interface Characteristic {
     value: number;
@@ -26,13 +25,13 @@ export type Characteristics = {
 export type CharacteristicsModification = (characteristics: Characteristics) => Partial<Characteristics>;
 export type CharacteristicAttributeModification = (modification: ValueModification) => GameStateModification;
 
-const modifyCharacteristics: (modification: CharacteristicsModification) => GameStateModification =
+export const modifyCharacteristics: (modification: CharacteristicsModification) => GameStateModification =
     (modification: CharacteristicsModification) => (gameState: GameState) => ({
         ...gameState,
         characteristics: {...gameState.characteristics, ...modification(gameState.characteristics)}
     });
 
-const modifyCharacteristicValue: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
+export const modifyCharacteristicValue: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
     (characteristicName: CharacteristicType) => (modification: ValueModification) =>
         modifyCharacteristics(characteristics =>
             flow(
@@ -40,12 +39,12 @@ const modifyCharacteristicValue: (characteristicName: CharacteristicType) => Cha
                 characteristic => ({
                     [characteristicName]: {
                         ...characteristic,
-                        value: Math.min(modification(characteristic.value), characteristic.limit || characteristic.max)
+                        value: clamp(modification(characteristic.value), 0, characteristic.limit || characteristic.max)
                     }
                 })
             )());
 
-const modifyCharacteristicLimit: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
+export const modifyCharacteristicLimit: (characteristicName: CharacteristicType) => CharacteristicAttributeModification =
     (characteristicName: CharacteristicType) => (modification: ValueModification) =>
         modifyCharacteristics(characteristics =>
             flow(
@@ -58,15 +57,5 @@ const modifyCharacteristicLimit: (characteristicName: CharacteristicType) => Cha
                 })
             )());
 
-export const modifyEnergy: CharacteristicAttributeModification =
-    (modification: ValueModification) =>
-        flow(
-            modifyCharacteristicValue(CharacteristicType.ENERGY)(modification),
-            startCondition(ConditionType.TIRED)
-        );
-
-export const modifyEnergyLimit: CharacteristicAttributeModification =
-    modifyCharacteristicLimit(CharacteristicType.ENERGY);
-
-export const modifyRestSpeed: CharacteristicAttributeModification =
-    modifyCharacteristicValue(CharacteristicType.REST_SPEED);
+export const isLessThenPercentOfMax = (characteristic: Characteristic, percent: number): boolean =>
+    characteristic.value * 100 < characteristic.max * percent;
