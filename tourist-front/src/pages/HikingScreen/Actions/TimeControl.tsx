@@ -1,5 +1,5 @@
 import React from "react";
-import {FaFastForward, FaPause, FaPlay} from "react-icons/all";
+import {FaPause, FaPlay} from "react-icons/all";
 import {ToggleButton, ToggleButtonGroup} from "react-bootstrap";
 import {connect} from "react-redux";
 import {TimeControlState, TimeSpeeds} from "model/time/timeControlState";
@@ -21,7 +21,8 @@ const TimeControl: React.FC<TimeControlProps> = ({timeControlState: {speed, paus
         <ToggleButtonGroup name="speed" type="radio" value={value} onChange={handleChange}>
             <ToggleButton value={0}><FaPause/></ToggleButton>
             <ToggleButton value={TimeSpeeds.NORMAL}><FaPlay/></ToggleButton>
-            <ToggleButton value={TimeSpeeds.X2}><FaFastForward/></ToggleButton>
+            <ToggleButton value={TimeSpeeds.X2}>x2</ToggleButton>
+            <ToggleButton value={TimeSpeeds.X4}>x4</ToggleButton>
         </ToggleButtonGroup>
     );
 };

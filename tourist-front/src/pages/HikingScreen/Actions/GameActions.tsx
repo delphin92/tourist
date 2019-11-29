@@ -11,7 +11,7 @@ interface GameActionsProps {
 }
 
 const GameActions: React.FC<GameActionsProps> = ({actions, onDoAction}) => (
-    <div className="flex-row">
+    <div className="flex-row mt-2">
         {actions.map((action, index) =>
             <Button key={index} onClick={() => onDoAction(action)}>{action.label}</Button>
         )}
