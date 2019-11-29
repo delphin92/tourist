@@ -1,7 +1,8 @@
 import {ConditionType, startCondition, stopCondition} from "../conditions/conditions";
 import {GameStateModification} from "../gameState";
-import {flow, mapValues, flatten} from "lodash";
+import {flatten, flow, mapValues} from "lodash";
 import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
+import {CharacteristicType, modifyCharacteristicValue} from "model/game/characteristics/characteristics";
 
 interface Action {
     name: string;
@@ -25,7 +26,8 @@ const actions = createActions({
     },
     startWalk: {
         label: 'Пойти',
-        effect: flow(startCondition(ConditionType.WALK), stopCondition(ConditionType.REST))
+        effect: flow(startCondition(ConditionType.WALK), stopCondition(ConditionType.REST),
+            modifyCharacteristicValue(CharacteristicType.REST_SPEED)(() => 0))
     }
 });
 

@@ -81,7 +81,7 @@ const CONDITIONS: Partial<Conditions> = {
     rest: {
         permanentEffect: () => flow(
             gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
-            modifyRestSpeed(speed => speed + 10)
+            modifyRestSpeed(speed => speed + 20)
         )
     },
     wake: {},
