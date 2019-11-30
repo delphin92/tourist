@@ -7,7 +7,7 @@ export type CharacteristicsLabels = {
 export const characteristicsLabels: CharacteristicsLabels = {
     [CharacteristicType.ENERGY]: 'Силы',
     [CharacteristicType.CHEERFULNESS]: 'Бодрость',
-    [CharacteristicType.BELLYFUL]: 'Сытость',
+    [CharacteristicType.SATIETY]: 'Сытость',
     [CharacteristicType.HYDRATION]: 'Вода',
     [CharacteristicType.MOOD]: 'Настроение',
     [CharacteristicType.COMFORT]: 'Комфорт',

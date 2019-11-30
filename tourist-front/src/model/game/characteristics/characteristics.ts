@@ -11,7 +11,7 @@ export interface Characteristic {
 export enum CharacteristicType {
     ENERGY = 'energy',
     CHEERFULNESS = 'cheerfulness',
-    BELLYFUL = 'bellyful',
+    SATIETY= 'satiety',
     HYDRATION = 'hydration',
     MOOD = 'mood',
     COMFORT = 'comfort',

@@ -10,7 +10,7 @@ const Characteristics: React.FC<CharacteristicsProps> = () => (
     <div>
         <CharacteristicMonitor characteristicType={CharacteristicType.ENERGY}/>
         <CharacteristicMonitor characteristicType={CharacteristicType.CHEERFULNESS}/>
-        <CharacteristicMonitor characteristicType={CharacteristicType.BELLYFUL}/>
+        <CharacteristicMonitor characteristicType={CharacteristicType.SATIETY}/>
         <CharacteristicMonitor characteristicType={CharacteristicType.HYDRATION}/>
         <CharacteristicMonitor characteristicType={CharacteristicType.MOOD}/>
         <CharacteristicMonitor characteristicType={CharacteristicType.COMFORT}/>
