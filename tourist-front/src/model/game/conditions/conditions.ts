@@ -3,6 +3,7 @@ import {combineModifications, NEUTRAL_GAME_STATE_MODIFICATION, when} from "model
 import { flow, without } from "lodash";
 import {modifyMood, modifyRestSpeed} from "model/game/characteristics/modifications/other";
 import {modifyEnergy, modifyEnergyLimit} from "model/game/characteristics/modifications/energy";
+import {modifySatiety} from "model/game/characteristics/modifications/satiety";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -84,7 +85,16 @@ const CONDITIONS: Partial<Conditions> = {
             modifyRestSpeed(speed => speed + 20)
         )
     },
-    wake: {},
+    wake: {
+        permanentEffect: () => flow(
+            modifySatiety(satiety => satiety - 3)
+        )
+    },
+    sleep: {
+        permanentEffect: () => flow(
+            modifySatiety(satiety => satiety - 1)
+        )
+    },
     tired: {
         startEffect: () => modifyMood(mood => mood - 200),
         endEffect: () => modifyMood(mood => mood + 200)

@@ -4,6 +4,7 @@ import {applyAllConditions, ConditionType} from "model/game/conditions/condition
 export interface GameState {
     characteristics: Characteristics;
     activeConditions: ConditionType[];
+    equipment: string[];    // names
 }
 
 export type GameStateModification = (gameState: GameState) => GameState;
