@@ -13,7 +13,7 @@ const initialGameState: GameState =
                 [CharacteristicType.ENERGY]: initCharacteristic(5000, 5000, 5000),
                 [CharacteristicType.CHEERFULNESS]: initCharacteristic(600, 1000, 1000),
                 [CharacteristicType.SATIETY]: initCharacteristic(800, 1000, 1000),
-                [CharacteristicType.HYDRATION]: initCharacteristic(500, 1000, 1000),
+                [CharacteristicType.HYDRATION]: initCharacteristic(2000, 3000),
                 [CharacteristicType.MOOD]: initCharacteristic(700, 1000, 1000),
                 [CharacteristicType.COMFORT]: initCharacteristic(10, 100),
                 [CharacteristicType.REST_SPEED]: initCharacteristic(10, 240)

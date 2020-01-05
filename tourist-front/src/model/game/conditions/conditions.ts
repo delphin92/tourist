@@ -4,6 +4,7 @@ import { flow, without } from "lodash";
 import {modifyMood, modifyRestSpeed} from "model/game/characteristics/modifications/other";
 import {modifyEnergy, modifyEnergyLimit} from "model/game/characteristics/modifications/energy";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
+import {modifyHydration} from "model/game/characteristics/modifications/hydration";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -12,6 +13,8 @@ export enum ConditionType {
     SLEEP = 'sleep',
     HUNGRY = 'hungry',
     VERY_HUNGRY = 'veryHungry',
+    THIRST = 'thirst',
+    STRONG_THIRST = 'strongThirst',
     TIRED = 'tired'
 }
 
@@ -87,12 +90,14 @@ const CONDITIONS: Partial<Conditions> = {
     },
     wake: {
         permanentEffect: () => flow(
-            modifySatiety(satiety => satiety - 3)
+            modifySatiety(satiety => satiety - 3),
+            modifyHydration(satiety => satiety - 3)
         )
     },
     sleep: {
         permanentEffect: () => flow(
-            modifySatiety(satiety => satiety - 1)
+            modifySatiety(satiety => satiety - 1),
+            modifyHydration(satiety => satiety - 1)
         )
     },
     tired: {

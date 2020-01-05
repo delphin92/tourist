@@ -3,6 +3,7 @@ import { mapValues, flow } from "lodash";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
 import produce from "immer";
 import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
+import {modifyHydration} from "model/game/characteristics/modifications/hydration";
 
 export interface Equip {
     name: string;
@@ -32,6 +33,7 @@ const equipments = createEquipments({
         imgPath: '/images/equipments/chocolateBar.jpg',
         useEffect: flow(
             modifySatiety(satiety => satiety + 500),
+            modifyHydration(hydration => hydration - 100),
             state => produce(state, draftState => {
                 draftState.equipment.splice(state.equipment.indexOf('chocolateBar'), 1);
             })
