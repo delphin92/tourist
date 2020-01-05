@@ -14,7 +14,7 @@ const gameClock = createSlice({
             if (state.minute === 60) {
                 state.minute = 0;
                 state.hour++;
-                if (state.minute === 24) {
+                if (state.hour === 24) {
                     state.hour = 0;
                     state.day++;
                 }
