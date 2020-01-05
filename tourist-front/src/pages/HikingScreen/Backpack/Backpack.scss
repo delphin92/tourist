@@ -1,0 +1,20 @@
+.backpack {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+
+  .card {
+    flex: 0 0 127px;
+    cursor: pointer;
+
+    .card-body {
+      padding: 0.75rem;
+    }
+  }
+}
+
+
+.equip-card {
+  width: 120px;
+}
