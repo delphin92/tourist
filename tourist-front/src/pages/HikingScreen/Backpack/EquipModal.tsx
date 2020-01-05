@@ -30,9 +30,12 @@ const EquipModal: React.FC<EquipModalProps> = ({onUseEquipment}, ref) => {
 
     return (
         <Modal show={show} onHide={close}>
-            <Modal.Header>{equipment.label}</Modal.Header>
+            <Modal.Header><Modal.Title>{equipment.label}</Modal.Title></Modal.Header>
             <Modal.Body>
                 <Image rounded className="w-100" src={equipment.imgPath}/>
+                {equipment.description &&
+                    <p>{equipment.description}</p>
+                }
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={close}>
