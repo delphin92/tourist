@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "redux-starter-kit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {TimeControlState, TimeSpeeds} from "model/time/timeControlState";
 import {AppThunk} from "redux/store";
 import { turn } from "./gameState";

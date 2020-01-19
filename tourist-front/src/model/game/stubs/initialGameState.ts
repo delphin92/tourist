@@ -19,7 +19,10 @@ const initialGameState: GameState =
                 [CharacteristicType.REST_SPEED]: initCharacteristic(10, 240)
             },
             activeConditions: [],
-            equipment: ['chocolateBar', 'chocolateBar', 'chocolateBar']
+            equipment: ['chocolateBar', 'chocolateBar', 'chocolateBar'],
+            gameLog: {
+                items: []
+            }
         }),
         startCondition(ConditionType.WALK),
         startCondition(ConditionType.WAKE)

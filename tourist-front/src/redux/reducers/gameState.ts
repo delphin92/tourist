@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "redux-starter-kit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {nextTurn, GameState} from "model/game/gameState";
 import initialGameState from "model/game/stubs/initialGameState";
 import {ActionData, getActionEffect} from "model/game/actions/actions";

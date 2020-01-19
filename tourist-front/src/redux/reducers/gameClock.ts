@@ -1,4 +1,4 @@
-import {createSlice} from "redux-starter-kit";
+import {createSlice} from "@reduxjs/toolkit";
 import {GameClock} from "model/game/gameClock";
 
 const gameClock = createSlice({

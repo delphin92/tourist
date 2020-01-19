@@ -1,10 +1,10 @@
 import {GameStateModification} from "model/game/gameState";
 import { mapValues, flow } from "lodash";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
-import produce from "immer";
 import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
 import {modifyHydration} from "model/game/characteristics/modifications/hydration";
 import {modifyMood} from "model/game/characteristics/modifications/other";
+import {remove} from "utils/arrayUtils";
 
 export interface Equip {
     name: string;
@@ -38,8 +38,9 @@ const equipments = createEquipments({
             modifySatiety(satiety => satiety + 500),
             modifyMood(mood => mood + 50),
             modifyHydration(hydration => hydration - 100),
-            state => produce(state, draftState => {
-                draftState.equipment.splice(state.equipment.indexOf('chocolateBar'), 1);
+            state => ({
+                ...state,
+                equipment: remove(state.equipment, state.equipment.indexOf('chocolateBar'))
             })
         )
     }

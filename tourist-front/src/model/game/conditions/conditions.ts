@@ -5,6 +5,7 @@ import {modifyMood, modifyRestSpeed} from "model/game/characteristics/modificati
 import {modifyEnergy, modifyEnergyLimit} from "model/game/characteristics/modifications/energy";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
 import {modifyHydration} from "model/game/characteristics/modifications/hydration";
+import {GameLogMessage, pushToGameLog} from "model/game/gameLog";
 
 export enum ConditionType {
     WALK = 'walk',
@@ -22,6 +23,8 @@ export interface Condition {
     startEffect?: () => GameStateModification;
     endEffect?: () => GameStateModification;
     permanentEffect?: () => GameStateModification;
+    startMessage?: GameLogMessage;
+    endMessage?: GameLogMessage;
 }
 
 export type Conditions = {
@@ -42,6 +45,9 @@ export const startCondition = (conditionType: ConditionType): GameStateModificat
             state => ({...state, activeConditions: [...state.activeConditions, conditionType]}),
             condition.startEffect
                 ? condition.startEffect()
+                : NEUTRAL_GAME_STATE_MODIFICATION,
+            condition.startMessage
+                ? pushToGameLog(condition.startMessage)
                 : NEUTRAL_GAME_STATE_MODIFICATION
         )
     );
@@ -59,6 +65,9 @@ export const stopCondition = (conditionType: ConditionType): GameStateModificati
             state => ({...state, activeConditions: without(state.activeConditions, conditionType)}),
             condition.endEffect
                 ? condition.endEffect()
+                : NEUTRAL_GAME_STATE_MODIFICATION,
+            condition.endMessage
+                ? pushToGameLog(condition.endMessage)
                 : NEUTRAL_GAME_STATE_MODIFICATION
         )
     );
@@ -100,8 +109,27 @@ const CONDITIONS: Partial<Conditions> = {
             modifyHydration(satiety => satiety - 1)
         )
     },
+    hungry: {
+        startMessage: { text: 'Вы проголодались', style: 'bold' },
+        endMessage: { text: 'Вы утолили чувство голода', style: 'bold' }
+    },
+    veryHungry: {
+        startMessage: { text: 'Вы чувствуете, что умираете от голода', style: 'bold' },
+        endMessage: { text: 'Чувство голода уменьшилось', style: 'bold' }
+    },
+    thirst: {
+        startMessage: { text: 'Вы хотите пить', style: 'bold' },
+        endMessage: { text: 'Вы утолили жажду', style: 'bold' }
+    },
+    strongThirst: {
+        startMessage: { text: 'Вас мучает сильная жажда', style: 'bold' },
+        endMessage: { text: 'Вы меньше хотите пить', style: 'bold' }
+    },
     tired: {
         startEffect: () => modifyMood(mood => mood - 200),
-        endEffect: () => modifyMood(mood => mood + 200)
+        endEffect: () => modifyMood(mood => mood + 200),
+
+        startMessage: { text: 'Вы чувствуете сильную усталость', style: 'bold' },
+        endMessage: { text: 'Вы больше не чувствуете себя сильно уставшим', style: 'bold' }
     }
 };

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux-starter-kit';
+import { combineReducers } from '@reduxjs/toolkit';
 import gameState from "redux/reducers/gameState";
 import timeControl from "redux/reducers/timeControl";
 import gameClock from "redux/reducers/gameClock";

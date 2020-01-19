@@ -4,6 +4,7 @@ import Characteristics from "pages/HikingScreen/Characteristics/Characteristics"
 import Backpack from "pages/HikingScreen/Backpack/Backpack";
 import "pages/HikingScreen/HikingScreen.scss"
 import Actions from "pages/HikingScreen/Actions/Actions";
+import GameLog from "pages/HikingScreen/GameLog/GameLog";
 
 const HikingScreen: React.FC = () => (
     <Container className="hiking-screen-container">
@@ -13,7 +14,7 @@ const HikingScreen: React.FC = () => (
             </Col>
             <Col sm={6} className="hiking-screen-center">
                 <div className="hiking-screen-center-top">
-                    123
+                    <GameLog/>
                 </div>
                 <div className="hiking-screen-center-bottom hiking-screen-panel">
                     <Actions/>
