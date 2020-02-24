@@ -3,6 +3,7 @@ import TimeControl from "pages/HikingScreen/Actions/TimeControl";
 import {Card} from "react-bootstrap";
 import GameActions from "pages/HikingScreen/Actions/GameActions";
 import GameClock from "pages/HikingScreen/Actions/GameClock";
+import RouteInfo from "pages/HikingScreen/Actions/RouteInfo";
 
 interface ActionsProps {
 
@@ -13,7 +14,10 @@ const Actions: React.FC<ActionsProps> = () => (
         <Card.Body>
             <div className="d-flex flex-row justify-content-between">
                 <TimeControl/>
-                <GameClock/>
+                <div>
+                    <GameClock/>
+                    <RouteInfo/>
+                </div>
             </div>
             <GameActions/>
         </Card.Body>

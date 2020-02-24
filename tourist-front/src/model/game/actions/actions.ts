@@ -32,7 +32,7 @@ const actions = createActions({
 });
 
 export type ConditionsToActionsMap = {
-    [condition in ConditionType]?: (keyof typeof actions)[];
+    [condition: string]: (keyof typeof actions)[];
 }
 
 const conditionsActionsMap: ConditionsToActionsMap = {
@@ -40,7 +40,7 @@ const conditionsActionsMap: ConditionsToActionsMap = {
     [ConditionType.REST]: ['startWalk']
 };
 
-export const getAvailableActions = (activeConditions: ConditionType[]): ActionData[] =>
+export const getAvailableActions = (activeConditions: string[]): ActionData[] =>
     flatten(
         activeConditions.map(condition =>
             (conditionsActionsMap[condition] || []).map(

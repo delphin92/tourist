@@ -2,6 +2,9 @@ import {GameState} from "model/game/gameState";
 import {ConditionType, startCondition} from "model/game/conditions/conditions";
 import {Characteristic, CharacteristicType} from "model/game/characteristics/characteristics";
 import {flow} from "lodash";
+import {simpleWay} from "model/game/stubs/routes/simpleWay";
+import {commonAreas} from "model/game/stubs/routes/commonAreas";
+import {loadRoute} from "model/game/route/route";
 
 const initCharacteristic: (value: number, max: number, limit?: number) => Characteristic =
     (value: number, max: number, limit?: number) => ({ value, limit, max });
@@ -22,8 +25,16 @@ const initialGameState: GameState =
             equipment: ['chocolateBar', 'chocolateBar', 'chocolateBar'],
             gameLog: {
                 items: []
+            },
+            route: {
+                position: 0,
+                nextWayPointIndex: 0
+            },
+            gameConfig: {
+                areas: {...commonAreas},
             }
         }),
+        loadRoute(simpleWay),
         startCondition(ConditionType.WALK),
         startCondition(ConditionType.WAKE)
     )();
