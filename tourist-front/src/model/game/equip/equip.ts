@@ -43,5 +43,16 @@ const equipments = createEquipments({
                 equipment: remove(state.equipment, state.equipment.indexOf('chocolateBar'))
             })
         )
-    }
+    }, bottleWithWater: {
+        label: 'Бутылка с водой',
+        description: 'Маленькая бутылка с водой, хватит чтобы один раз как следует напиться.',
+        imgPath: '/images/equipments/bottleWithWater.jpg',
+        useEffect: flow(
+            modifyHydration(hydration => hydration + 500),
+            state => ({
+                ...state,
+                equipment: remove(state.equipment, state.equipment.indexOf('bottleWithWater'))
+            })
+        )
+    },
 });

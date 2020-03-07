@@ -22,7 +22,7 @@ const initialGameState: GameState =
                 [CharacteristicType.REST_SPEED]: initCharacteristic(10, 240)
             },
             activeConditions: [],
-            equipment: ['chocolateBar', 'chocolateBar', 'chocolateBar'],
+            equipment: ['chocolateBar', 'chocolateBar', 'chocolateBar', 'bottleWithWater', 'bottleWithWater'],
             gameLog: {
                 items: []
             },
