@@ -1,7 +1,7 @@
 import {ConditionType, startCondition, stopCondition} from "../conditions/conditions";
 import {GameStateModification} from "../gameState";
-import {flatten, flow, mapValues} from "lodash";
-import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
+import {flatten, flow} from "lodash";
+import {addNamesToConfig, NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
 import {CharacteristicType, modifyCharacteristicValue} from "model/game/characteristics/characteristics";
 
 interface Action {
@@ -10,16 +10,9 @@ interface Action {
     effect: GameStateModification;
 }
 
-type ActionPart = Omit<Action, 'name'>;
 export type ActionData = Omit<Action, 'effect'>;
 
-const createActions = (actions: Record<string, ActionPart>): Record<string, Action> =>
-    mapValues(actions, (actionPart, name) => ({
-        ...actionPart,
-        name
-    }));
-
-const actions = createActions({
+const actions = addNamesToConfig({
     stopWalk: {
         label: 'Остановиться',
         effect: flow(startCondition(ConditionType.REST), stopCondition(ConditionType.WALK))

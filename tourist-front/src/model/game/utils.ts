@@ -1,5 +1,6 @@
 import {GameState, GameStateModification} from "model/game/gameState";
 import {ConditionType, startCondition, stopCondition} from "model/game/conditions/conditions";
+import { mapValues } from "lodash";
 
 export type ValueModification = (value: number) => number;
 export type GameStatePredicate = (state: GameState) => boolean;
@@ -22,3 +23,9 @@ export const checkCondition = (condition: ConditionType, predicate: GameStatePre
         : stopCondition(condition)(state);
 
 export const NEUTRAL_GAME_STATE_MODIFICATION: GameStateModification = state => state;
+
+export const addNamesToConfig = <T>(config: Record<string, T>): Record<string, T & {name: string}> =>
+    mapValues(config, (item, name) => ({
+        ...item,
+        name
+    }));

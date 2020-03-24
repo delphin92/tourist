@@ -1,25 +1,35 @@
 import {WayPoint} from "model/game/route/wayPoint";
-import {Areas, endArea, startArea} from "model/game/route/area";
+import {Area, Areas, endArea, startArea} from "model/game/route/area";
 import {GameStateModification} from "model/game/gameState";
 import { flow } from "lodash";
 import {NEUTRAL_GAME_STATE_MODIFICATION, when} from "model/game/utils";
+import {routes} from "model/game/stubs/routes";
 
 export interface Route {
+    name: string;
     length: number;
     wayPoints: WayPoint[];
     areas?: Areas;
 }
 
 export interface RouteState {
+    name: string;
     position: number;
     nextWayPointIndex: number;
 }
 
 const MOVE_SPEED = 55; // meters  per minute
 
+export const makeRouteAreaName = (area: Area, route: Route): string =>
+    route.name + '_' + area.name;
+
+export const getRoute = (name: string): Route =>
+    routes[name];
+
 const checkWayPoints: GameStateModification = state => {
-    const {route, gameConfig} = state;
-    const nextWayPoint = gameConfig.route.wayPoints[route.nextWayPointIndex];
+    const {route} = state;
+    const routeConfig = getRoute(route.name);
+    const nextWayPoint = routeConfig.wayPoints[route.nextWayPointIndex];
 
     if (nextWayPoint && route.position >= nextWayPoint.position) {
         const newState = {
@@ -31,8 +41,8 @@ const checkWayPoints: GameStateModification = state => {
         };
 
         return flow(
-            nextWayPoint.startArea ? startArea(nextWayPoint.startArea) : NEUTRAL_GAME_STATE_MODIFICATION,
-            nextWayPoint.endArea ? endArea(nextWayPoint.endArea) : NEUTRAL_GAME_STATE_MODIFICATION
+            nextWayPoint.endArea ? endArea(route.name, nextWayPoint.endArea) : NEUTRAL_GAME_STATE_MODIFICATION,
+            nextWayPoint.startArea ? startArea(route.name, nextWayPoint.startArea) : NEUTRAL_GAME_STATE_MODIFICATION
         )(newState);
     } else {
         return state;
@@ -49,12 +59,12 @@ export const move: GameStateModification =
             }
         }),
         checkWayPoints,
-        when(state => state.route.position >= state.gameConfig.route.length)(
+        when(state => state.route.position >= getRoute(state.route.name).length)(
             state => ({
                 ...state,
                 route: {
                     ...state.route,
-                    position: state.gameConfig.route.length
+                    position: getRoute(state.route.name).length
                 }
             })
         )
@@ -64,15 +74,8 @@ export const loadRoute = (route: Route): GameStateModification =>
     state => ({
         ...state,
         route: {
+            name: route.name,
             position: 0,
             nextWayPointIndex: 0
-        },
-        gameConfig: {
-            ...state.gameConfig,
-            areas: {
-                ...state.gameConfig.areas,
-                ...route.areas
-            },
-            route
         }
     });

@@ -1,9 +1,9 @@
 import {Areas} from "model/game/route/area";
-import {when} from "model/game/utils";
+import {addNamesToConfig, when} from "model/game/utils";
 import {Conditions, ConditionType} from "model/game/conditions/conditions";
 import {modifyEnergy} from "model/game/characteristics/modifications/energy";
 
-export const commonAreas: Areas = {
+export const commonAreas: Areas = addNamesToConfig({
     forest: {
         startMessage: { text: 'Вы вошли в лес' },
         endMessage: { text: 'Вы вышли из леса' }
@@ -15,7 +15,7 @@ export const commonAreas: Areas = {
     goodForestPath: {
         startMessage: { text: 'Вы вышли на широкую лесную тропу.' }
     }
-};
+});
 
 export const commonAreasConditions: Conditions = {
     onBadForestPath: {
