@@ -18,13 +18,18 @@
 }
 
 .hiking-screen-center {
+    height: 100%;
     padding: 0 !important;
     display: flex;
     flex-direction: column;
 }
 
 .hiking-screen-center-top {
+    //height: 100%;
     flex: 1;
+    overflow: auto;
+    //display: flex;
+    //flex-direction: column;
 }
 
 .hiking-screen-center-bottom {

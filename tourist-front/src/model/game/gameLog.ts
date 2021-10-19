@@ -7,12 +7,12 @@ export interface GameLogMessage {
 }
 
 export interface GameLog {
-    items: GameLogMessage[];
+    items: GameLogMessage[];    // reversed - first item is last message
 }
 
 export const pushToGameLog = (message: GameLogMessage): GameStateModification => state => ({
     ...state,
     gameLog: {
-        items: [...state.gameLog.items, message]
+        items: [message, ...state.gameLog.items]
     }
 });
