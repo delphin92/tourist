@@ -1,10 +1,11 @@
 import {GameStateModification} from "model/game/gameState";
 import { mapValues, flow } from "lodash";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
-import {NEUTRAL_GAME_STATE_MODIFICATION} from "model/game/utils";
+import {NEUTRAL_GAME_STATE_MODIFICATION, when} from "model/game/utils";
 import {modifyHydration} from "model/game/characteristics/modifications/hydration";
 import {modifyMood} from "model/game/characteristics/modifications/other";
 import {remove} from "utils/arrayUtils";
+import {ConditionType, startCondition, stopCondition} from "model/game/conditions/conditions";
 
 export interface Equip {
     name: string;
@@ -54,5 +55,16 @@ const equipments = createEquipments({
                 equipment: remove(state.equipment, state.equipment.indexOf('bottleWithWater'))
             })
         )
-    },
+    }, matches: {
+        label: 'Спички',
+        description: 'Позволяют развести костер',
+        imgPath: '/images/equipments/match.jpg',
+        useEffect: flow(
+            when(state => state.activeConditions.includes(ConditionType.WALK))(flow(
+                stopCondition(ConditionType.WALK),
+                startCondition(ConditionType.REST),
+            )),
+            startCondition(ConditionType.NEAR_FIRE),
+        ),
+    }
 });

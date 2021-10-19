@@ -13,7 +13,8 @@ export enum ConditionType {
     VERY_HUNGRY = 'veryHungry',
     THIRST = 'thirst',
     STRONG_THIRST = 'strongThirst',
-    TIRED = 'tired'
+    TIRED = 'tired',
+    NEAR_FIRE = 'nearFire',
 }
 
 export interface Condition {
@@ -36,12 +37,13 @@ export const startCondition = (conditionType: string): GameStateModification => 
     if (condition && !state.activeConditions.includes(conditionType)) {
         return flow(
             state => ({...state, activeConditions: [...state.activeConditions, conditionType]}),
+            condition.startMessage
+                ? pushToGameLog(condition.startMessage)
+                : NEUTRAL_GAME_STATE_MODIFICATION,
             condition.startEffect
                 ? condition.startEffect()
                 : NEUTRAL_GAME_STATE_MODIFICATION,
-            condition.startMessage
-                ? pushToGameLog(condition.startMessage)
-                : NEUTRAL_GAME_STATE_MODIFICATION
+
         )(state);
     }
 
@@ -54,12 +56,12 @@ export const stopCondition = (conditionType: string): GameStateModification => s
     if (condition && state.activeConditions.includes(conditionType)) {
         return flow(
             state => ({...state, activeConditions: without(state.activeConditions, conditionType)}),
+            condition.endMessage
+                ? pushToGameLog(condition.endMessage)
+                : NEUTRAL_GAME_STATE_MODIFICATION,
             condition.endEffect
                 ? condition.endEffect()
                 : NEUTRAL_GAME_STATE_MODIFICATION,
-            condition.endMessage
-                ? pushToGameLog(condition.endMessage)
-                : NEUTRAL_GAME_STATE_MODIFICATION
         )(state);
     }
 

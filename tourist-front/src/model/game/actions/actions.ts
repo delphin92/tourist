@@ -19,7 +19,7 @@ const actions = addNamesToConfig({
     },
     startWalk: {
         label: 'Пойти',
-        effect: flow(startCondition(ConditionType.WALK), stopCondition(ConditionType.REST),
+        effect: flow(stopCondition(ConditionType.REST), startCondition(ConditionType.WALK),
             modifyCharacteristicValue(CharacteristicType.REST_SPEED)(() => 0))
     }
 });

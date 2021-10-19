@@ -1,25 +1,30 @@
 import {flow} from "lodash";
 import {modifyEnergy, modifyEnergyLimit} from "model/game/characteristics/modifications/energy";
-import {modifyMood, modifyRestSpeed} from "model/game/characteristics/modifications/other";
+import {modifyComfort, modifyMood, modifyRestSpeed} from "model/game/characteristics/modifications/other";
 import {modifySatiety} from "model/game/characteristics/modifications/satiety";
 import {modifyHydration} from "model/game/characteristics/modifications/hydration";
-import {Conditions} from "model/game/conditions/conditions";
+import {Conditions, stopCondition} from "model/game/conditions/conditions";
 import {commonAreasConditions} from "model/game/stubs/routes/commonAreas";
 import {move} from "model/game/route/route";
 
 export const allConditions: Conditions = {
     walk: {
+        startEffect: () => stopCondition('nearFire'),
         permanentEffect: () => flow(
             modifyEnergyLimit(value => value - 5),
             modifyEnergy(value => value - 80),
             move
-        )
+        ),
+        startMessage: { text: 'Вы начали движение' },
+        endMessage: { text: 'Вы остановились' },
     },
     rest: {
         permanentEffect: () => flow(
             gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
             modifyRestSpeed(speed => speed + 20)
-        )
+        ),
+        startMessage: { text: 'Вы расположились на отдых' },
+        endMessage: { text: 'Вы закончили отдыхать' },
     },
     wake: {
         permanentEffect: () => flow(
@@ -55,6 +60,20 @@ export const allConditions: Conditions = {
 
         startMessage: { text: 'Вы чувствуете сильную усталость', style: 'bold' },
         endMessage: { text: 'Вы больше не чувствуете себя сильно уставшим', style: 'bold' }
+    },
+    nearFire: {
+        startEffect: () => flow(
+          modifyRestSpeed(restSpeed => restSpeed + 20),
+          modifyComfort(comfort => comfort + 20),
+        ),
+        permanentEffect: () => modifyEnergyLimit(energyLimit => energyLimit + 1),
+        endEffect: () => flow(
+          modifyRestSpeed(restSpeed => restSpeed - 20),
+          modifyComfort(comfort => comfort - 20),
+        ),
+
+        startMessage: { text: 'Вы отдыхаете возле костра' },
+        endMessage: { text: 'Вы ушли от костра' }
     },
     ...commonAreasConditions
 };
