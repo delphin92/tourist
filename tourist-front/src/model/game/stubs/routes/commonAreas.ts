@@ -19,6 +19,8 @@ export const commonAreas: Areas = addNamesToConfig({
 
 export const commonAreasConditions: Conditions = {
     onBadForestPath: {
+        label: 'Плохая дорога',
+        description: 'Двигаться сложнее, энергия падает быстрее',
         permanentEffect: () => when(state => state.activeConditions.includes(ConditionType.WALK))
         (
             modifyEnergy(energy => energy - 10)

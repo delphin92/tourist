@@ -18,6 +18,9 @@ export enum ConditionType {
 }
 
 export interface Condition {
+    label: string;
+    description?: string;
+
     startEffect?: () => GameStateModification;
     endEffect?: () => GameStateModification;
     permanentEffect?: () => GameStateModification;

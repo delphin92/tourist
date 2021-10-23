@@ -9,6 +9,8 @@ import {move} from "model/game/route/route";
 
 export const allConditions: Conditions = {
     walk: {
+        label: 'Движение',
+        description: 'Энергия постепенно снижается',
         startEffect: () => stopCondition('nearFire'),
         permanentEffect: () => flow(
             modifyEnergyLimit(value => value - 5),
@@ -19,6 +21,8 @@ export const allConditions: Conditions = {
         endMessage: { text: 'Вы остановились' },
     },
     rest: {
+        label: 'Отдых',
+        description: 'Энергия постепенно восстанавливается',
         permanentEffect: () => flow(
             gameState => modifyEnergy(value => value + gameState.characteristics.restSpeed.value)(gameState),
             modifyRestSpeed(speed => speed + 20)
@@ -27,34 +31,44 @@ export const allConditions: Conditions = {
         endMessage: { text: 'Вы закончили отдыхать' },
     },
     wake: {
+        label: 'Бодрствование',
+        description: 'Бодрость снижается',
         permanentEffect: () => flow(
             modifySatiety(satiety => satiety - 3),
             modifyHydration(satiety => satiety - 3)
         )
     },
     sleep: {
+        label: 'Сон',
+        description: 'Бодрость восстанавливается. Сытость и вода снижается медленнее',
         permanentEffect: () => flow(
             modifySatiety(satiety => satiety - 1),
             modifyHydration(satiety => satiety - 1)
         )
     },
     hungry: {
+        label: 'Голод',
         startMessage: { text: 'Вы проголодались', style: 'bold' },
         endMessage: { text: 'Вы утолили чувство голода', style: 'bold' }
     },
     veryHungry: {
+        label: 'Сильный голод',
         startMessage: { text: 'Вы чувствуете, что умираете от голода', style: 'bold' },
         endMessage: { text: 'Чувство голода уменьшилось', style: 'bold' }
     },
     thirst: {
+        label: 'Жажда',
         startMessage: { text: 'Вы хотите пить', style: 'bold' },
         endMessage: { text: 'Вы утолили жажду', style: 'bold' }
     },
     strongThirst: {
+        label: 'Сильная жажда',
         startMessage: { text: 'Вас мучает сильная жажда', style: 'bold' },
         endMessage: { text: 'Вы меньше хотите пить', style: 'bold' }
     },
     tired: {
+        label: 'Усталость',
+        description: 'Настроение снижено',
         startEffect: () => modifyMood(mood => mood - 200),
         endEffect: () => modifyMood(mood => mood + 200),
 
@@ -62,6 +76,8 @@ export const allConditions: Conditions = {
         endMessage: { text: 'Вы больше не чувствуете себя сильно уставшим', style: 'bold' }
     },
     nearFire: {
+        label: 'У огня',
+        description: 'Отдых более эффективен',
         startEffect: () => flow(
           modifyRestSpeed(restSpeed => restSpeed + 20),
           modifyComfort(comfort => comfort + 20),
